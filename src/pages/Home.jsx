@@ -88,19 +88,19 @@ export default function Home() {
             <p className="text-lg font-medium">No products found in this category</p>
           </div>
         ) : (
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
-            key={activeCategory}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
-          >
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {filtered.map(product => (
-              <motion.div key={product.id} variants={item}>
+              <motion.div 
+                key={product.id} 
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+              >
                 <ProductCard product={product} />
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         )}
       </div>
     </motion.div>

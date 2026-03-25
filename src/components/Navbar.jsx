@@ -77,16 +77,28 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Mobile Hamburger */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden flex flex-col gap-1.5 p-2 cursor-pointer"
-          aria-label="Toggle menu"
-        >
-          <motion.span animate={{ rotate: mobileOpen ? 45 : 0, y: mobileOpen ? 8 : 0 }} className="block w-6 h-0.5 bg-gray-700" />
-          <motion.span animate={{ opacity: mobileOpen ? 0 : 1 }} className="block w-6 h-0.5 bg-gray-700" />
-          <motion.span animate={{ rotate: mobileOpen ? -45 : 0, y: mobileOpen ? -8 : 0 }} className="block w-6 h-0.5 bg-gray-700" />
-        </button>
+        {/* Mobile Nav */}
+        <div className="md:hidden flex items-center gap-4">
+          <Link to="/cart" className="relative text-gray-600 hover:text-violet-600">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            {cartCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 bg-violet-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="flex flex-col gap-1.5 py-2 cursor-pointer"
+            aria-label="Toggle menu"
+          >
+            <motion.span animate={{ rotate: mobileOpen ? 45 : 0, y: mobileOpen ? 8 : 0 }} className="block w-6 h-0.5 bg-gray-700" />
+            <motion.span animate={{ opacity: mobileOpen ? 0 : 1 }} className="block w-6 h-0.5 bg-gray-700" />
+            <motion.span animate={{ rotate: mobileOpen ? -45 : 0, y: mobileOpen ? -8 : 0 }} className="block w-6 h-0.5 bg-gray-700" />
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -100,7 +112,7 @@ export default function Navbar() {
             className="md:hidden overflow-hidden bg-white border-t border-gray-100"
           >
             <div className="flex flex-col px-4 py-3 gap-2">
-              {navLinks.map(link => (
+              {navLinks.filter(link => link.to !== '/cart').map(link => (
                 <Link
                   key={link.to}
                   to={link.to}
@@ -108,11 +120,6 @@ export default function Navbar() {
                   className="flex items-center justify-between py-2 text-sm font-medium text-gray-700 hover:text-violet-600"
                 >
                   {link.label}
-                  {link.badge > 0 && (
-                    <span className="bg-violet-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                      {link.badge}
-                    </span>
-                  )}
                 </Link>
               ))}
               {currentUser ? (

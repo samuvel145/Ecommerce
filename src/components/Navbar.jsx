@@ -1,0 +1,132 @@
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useApp } from '../context/AppContext'
+
+export default function Navbar() {
+  const { currentUser, logout, cartCount } = useApp()
+  const navigate = useNavigate()
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+    setMobileOpen(false)
+  }
+
+  const navLinks = [
+    { to: '/', label: 'Home' },
+    { to: '/cart', label: 'Cart', badge: cartCount },
+    { to: '/orders', label: 'Orders' },
+  ]
+
+  return (
+    <motion.nav
+      initial={{ y: -80 }}
+      animate={{ y: 0 }}
+      transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+      className="sticky top-0 z-50 backdrop-blur-sm bg-white/80 border-b border-gray-100 shadow-sm"
+    >
+      <div className="max-w-[1280px] mx-auto px-4 md:px-8 flex items-center justify-between h-16">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2 text-xl font-extrabold text-violet-600 tracking-tight">
+          eKids 👗
+        </Link>
+
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-6">
+          {navLinks.map(link => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className="relative text-sm font-medium text-gray-600 hover:text-violet-600 transition-colors"
+            >
+              {link.label}
+              {link.badge > 0 && (
+                <motion.span
+                  key={link.badge}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-2 -right-4 bg-violet-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center"
+                >
+                  {link.badge}
+                </motion.span>
+              )}
+            </Link>
+          ))}
+
+          {currentUser ? (
+            <div className="flex items-center gap-3 ml-2">
+              <span className="text-sm font-medium text-gray-700">
+                Hi, {currentUser.name}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="text-sm font-medium text-red-500 hover:text-red-600 transition-colors cursor-pointer"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="ml-2 px-4 py-2 bg-violet-600 text-white text-sm font-medium rounded-xl hover:bg-violet-700 transition-colors"
+            >
+              Login
+            </Link>
+          )}
+        </div>
+
+        {/* Mobile Hamburger */}
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="md:hidden flex flex-col gap-1.5 p-2 cursor-pointer"
+          aria-label="Toggle menu"
+        >
+          <motion.span animate={{ rotate: mobileOpen ? 45 : 0, y: mobileOpen ? 8 : 0 }} className="block w-6 h-0.5 bg-gray-700" />
+          <motion.span animate={{ opacity: mobileOpen ? 0 : 1 }} className="block w-6 h-0.5 bg-gray-700" />
+          <motion.span animate={{ rotate: mobileOpen ? -45 : 0, y: mobileOpen ? -8 : 0 }} className="block w-6 h-0.5 bg-gray-700" />
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden overflow-hidden bg-white border-t border-gray-100"
+          >
+            <div className="flex flex-col px-4 py-3 gap-2">
+              {navLinks.map(link => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-between py-2 text-sm font-medium text-gray-700 hover:text-violet-600"
+                >
+                  {link.label}
+                  {link.badge > 0 && (
+                    <span className="bg-violet-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                      {link.badge}
+                    </span>
+                  )}
+                </Link>
+              ))}
+              {currentUser ? (
+                <>
+                  <span className="py-2 text-sm text-gray-500">Hi, {currentUser.name}</span>
+                  <button onClick={handleLogout} className="py-2 text-sm font-medium text-red-500 text-left cursor-pointer">Logout</button>
+                </>
+              ) : (
+                <Link to="/login" onClick={() => setMobileOpen(false)} className="py-2 text-sm font-medium text-violet-600">Login</Link>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
+  )
+}

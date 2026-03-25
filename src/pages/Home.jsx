@@ -42,7 +42,7 @@ export default function Home() {
             transition={{ delay: 0.1, duration: 0.5 }}
             className="text-3xl md:text-5xl font-extrabold leading-tight"
           >
-            Kids Fashion,<br />South Indian Style 🌸
+            eTrends,<br />South Indian Style.
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}

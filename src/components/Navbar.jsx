@@ -30,7 +30,7 @@ export default function Navbar() {
       <div className="max-w-[1280px] mx-auto px-4 md:px-8 flex items-center justify-between h-16">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 text-xl font-extrabold text-violet-600 tracking-tight">
-          eKids 👗
+          eTrends
         </Link>
 
         {/* Desktop Nav */}

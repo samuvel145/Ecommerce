@@ -6,7 +6,7 @@ export default function Orders() {
   const { currentUser } = useApp()
   const navigate = useNavigate()
 
-  const ordersKey = `ekids_orders_${currentUser?.id}`
+  const ordersKey = `etrends_orders_${currentUser?.id}`
   const orders = JSON.parse(localStorage.getItem(ordersKey) || '[]')
 
   const formatDate = (dateStr) => {

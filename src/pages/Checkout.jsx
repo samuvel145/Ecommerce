@@ -39,7 +39,7 @@ export default function Checkout() {
     }
 
     // Save order
-    const ordersKey = `ekids_orders_${currentUser.id}`
+    const ordersKey = `etrends_orders_${currentUser.id}`
     const existingOrders = JSON.parse(localStorage.getItem(ordersKey) || '[]')
     existingOrders.unshift(order)
     localStorage.setItem(ordersKey, JSON.stringify(existingOrders))

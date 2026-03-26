@@ -57,7 +57,7 @@ export default function Home() {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="mt-4 text-lg md:text-2xl text-violet-100 font-medium max-w-2xl mx-auto italic"
           >
-            "Elevating Kids' Style, Rooted in Tradition." 🌸
+            "Timeless Dresses, Rooted in Tradition." 🌸
           </motion.p>
         </div>
       </div>
@@ -87,7 +87,7 @@ export default function Home() {
               placeholder="Search (e.g. boys shirt, pants...)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-gray-50 rounded-xl text-gray-900 border-2 border-transparent focus:border-violet-200 focus:bg-white focus:outline-none transition-all placeholder:text-gray-400 text-sm font-medium"
+              className="w-full pl-10 pr-4 py-3 bg-violet-50 rounded-xl text-gray-900 border-2 border-violet-100 focus:border-violet-300 focus:bg-white focus:outline-none transition-all placeholder:text-gray-400 text-sm font-medium shadow-sm"
             />
           </div>
         </div>

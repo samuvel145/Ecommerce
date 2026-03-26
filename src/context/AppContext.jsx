@@ -6,7 +6,7 @@ export function AppProvider({ children }) {
   // ──── AUTH STATE ────
   const [currentUser, setCurrentUser] = useState(() => {
     try {
-      const session = localStorage.getItem('ekids_session')
+      const session = localStorage.getItem('etrends_session')
       return session ? JSON.parse(session) : null
     } catch { return null }
   })
@@ -18,7 +18,7 @@ export function AppProvider({ children }) {
   useEffect(() => {
     if (currentUser) {
       try {
-        const saved = localStorage.getItem(`ekids_cart_${currentUser.id}`)
+        const saved = localStorage.getItem(`etrends_cart_${currentUser.id}`)
         setCartItems(saved ? JSON.parse(saved) : [])
       } catch { setCartItems([]) }
     } else {
@@ -29,37 +29,37 @@ export function AppProvider({ children }) {
   // Persist cart on change
   useEffect(() => {
     if (currentUser) {
-      localStorage.setItem(`ekids_cart_${currentUser.id}`, JSON.stringify(cartItems))
+      localStorage.setItem(`etrends_cart_${currentUser.id}`, JSON.stringify(cartItems))
     }
   }, [cartItems, currentUser])
 
   // ──── AUTH FUNCTIONS ────
   const login = useCallback((email, password) => {
-    const users = JSON.parse(localStorage.getItem('ekids_users') || '[]')
+    const users = JSON.parse(localStorage.getItem('etrends_users') || '[]')
     const user = users.find(u => u.email === email && u.password === password)
     if (!user) return { success: false, error: 'Invalid email or password' }
     const session = { id: user.id, email: user.email, name: user.name }
-    localStorage.setItem('ekids_session', JSON.stringify(session))
+    localStorage.setItem('etrends_session', JSON.stringify(session))
     setCurrentUser(session)
     return { success: true }
   }, [])
 
   const register = useCallback((name, email, password) => {
-    const users = JSON.parse(localStorage.getItem('ekids_users') || '[]')
+    const users = JSON.parse(localStorage.getItem('etrends_users') || '[]')
     if (users.find(u => u.email === email)) {
       return { success: false, error: 'Email already registered' }
     }
     const newUser = { id: `u_${Date.now()}`, name, email, password }
     users.push(newUser)
-    localStorage.setItem('ekids_users', JSON.stringify(users))
+    localStorage.setItem('etrends_users', JSON.stringify(users))
     const session = { id: newUser.id, email: newUser.email, name: newUser.name }
-    localStorage.setItem('ekids_session', JSON.stringify(session))
+    localStorage.setItem('etrends_session', JSON.stringify(session))
     setCurrentUser(session)
     return { success: true }
   }, [])
 
   const logout = useCallback(() => {
-    localStorage.removeItem('ekids_session')
+    localStorage.removeItem('etrends_session')
     setCurrentUser(null)
     setCartItems([])
   }, [])
@@ -106,7 +106,7 @@ export function AppProvider({ children }) {
   const clearCart = useCallback(() => {
     setCartItems([])
     if (currentUser) {
-      localStorage.removeItem(`ekids_cart_${currentUser.id}`)
+      localStorage.removeItem(`etrends_cart_${currentUser.id}`)
     }
   }, [currentUser])
 

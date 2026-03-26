@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import products from '../data/products'
@@ -10,7 +10,12 @@ export default function ProductDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { addToCart, currentUser } = useApp()
-  const product = products.find(p => p.id === id)
+  
+  const product = products.find(p => String(p.id) === String(id))
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [id])
 
   const [selectedSize, setSelectedSize] = useState(null)
   const [added, setAdded] = useState(false)

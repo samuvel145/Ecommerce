@@ -20,11 +20,18 @@ const item = {
 }
 
 export default function Home() {
-  const [activeCategory, setActiveCategory] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const filtered = activeCategory === 'all'
-    ? products
-    : products.filter(p => p.category === activeCategory)
+  const filtered = products.filter(p => {
+    const q = searchQuery.toLowerCase().trim()
+    if (!q) return true
+    
+    return (
+      p.name.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q) ||
+      p.subCategory.toLowerCase().includes(q)
+    )
+  })
 
   return (
     <motion.div
@@ -35,7 +42,7 @@ export default function Home() {
     >
       {/* Hero Banner */}
       <div className="bg-gradient-to-br from-violet-600 via-purple-600 to-violet-800 text-white">
-        <div className="max-w-[1280px] mx-auto px-4 md:px-8 py-14 md:py-20">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-8 py-14 md:py-20 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -44,51 +51,53 @@ export default function Home() {
           >
             eTrends,<br />South Indian Style.
           </motion.h1>
-          <motion.p
+          
+          {/* Search Bar */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.5 }}
-            className="mt-4 text-lg md:text-xl text-violet-100 max-w-xl"
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="mt-10 max-w-xl mx-auto relative group"
           >
-            Shop the finest clothing for your little ones — shirts, pants, and traditional chudithars.
-          </motion.p>
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span className="text-gray-400 group-focus-within:text-violet-500 transition-colors">🔍</span>
+            </div>
+            <input
+              type="text"
+              placeholder="Search (e.g. boys shirt, pants, chudithar...)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-4 md:py-5 bg-white rounded-2xl text-gray-900 shadow-xl border-2 border-transparent focus:border-violet-400 focus:outline-none transition-all placeholder:text-gray-400 font-medium"
+            />
+          </motion.div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-[1280px] mx-auto px-4 md:px-8 py-8">
-        {/* Filter Tabs */}
-        <div className="flex gap-2 mb-8">
-          {categories.map(cat => (
-            <button
-              key={cat.key}
-              onClick={() => setActiveCategory(cat.key)}
-              className={`relative px-5 py-2 rounded-full text-sm font-semibold transition-colors cursor-pointer ${
-                activeCategory === cat.key
-                  ? 'bg-violet-600 text-white shadow-lg shadow-violet-200'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {activeCategory === cat.key && (
-                <motion.span
-                  layoutId="activeTab"
-                  className="absolute inset-0 bg-violet-600 rounded-full -z-10"
-                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                />
-              )}
-              {cat.label}
-            </button>
-          ))}
+      <div className="max-w-[1280px] mx-auto px-4 md:px-8 py-12">
+        {/* Results Header */}
+        <div className="mb-8 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-gray-900">
+            {searchQuery ? `Results for "${searchQuery}"` : 'All Products'}
+            <span className="ml-2 text-sm font-normal text-gray-500">({filtered.length})</span>
+          </h2>
         </div>
 
         {/* Product Grid */}
         {filtered.length === 0 ? (
-          <div className="text-center py-20 text-gray-400">
-            <p className="text-4xl mb-3">🔍</p>
-            <p className="text-lg font-medium">No products found in this category</p>
+          <div className="text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+            <p className="text-5xl mb-4">🛒</p>
+            <p className="text-xl font-bold text-gray-900">No matching products found</p>
+            <p className="text-gray-500 mt-2">Try searching for "boys", "girls", "shirt", or "chudithar"</p>
+            <button 
+              onClick={() => setSearchQuery('')}
+              className="mt-6 text-violet-600 font-semibold hover:underline"
+            >
+              Clear all filters
+            </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
             {filtered.map(product => (
               <div key={product.id}>
                 <ProductCard product={product} />
